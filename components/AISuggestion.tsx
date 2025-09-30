@@ -1,20 +1,22 @@
-async function AISuggestion({ term }: { term: string }) {
+async function AIAzureSuggestion({ term }: { term: string }) {
   const fetchSuggestion = async () => {
     try {
-      // Cambiar a GET y pasar el término en la URL
-      const response = await fetch(`/api/suggestions?term=${encodeURIComponent(term)}`, {
-        method: "GET",
+      const response = await fetch("/api/suggestions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ term }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to fetch suggestion");
       }
 
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Error fetching suggestion:", error);
-      return { message: "Unable to fetch suggestion at this time." };
+      return { content: "Unable to fetch suggestion at this time." };
     }
   };
 
@@ -26,12 +28,12 @@ async function AISuggestion({ term }: { term: string }) {
 
       <div>
         <p className="text-sm text-purple-400">
-          AI Assistant Suggests:{" "}
+          Azure Open AI Assistant Suggests:{" "}
         </p>
-        <p className="italic text-xl">{suggestion.message}</p>
+        <p className="italic text-xl">{suggestion.content}</p>
       </div>
     </div>
   );
 }
 
-export default AISuggestion;
+export default AIAzureSuggestion;
